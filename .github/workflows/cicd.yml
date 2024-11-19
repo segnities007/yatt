@@ -1,0 +1,15 @@
+name: CI
+
+on: push
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: lint
+      run: ./gradlew lintRelease
+
+    - name: test
+      run: ./gradlew testReleaseUnitTest
