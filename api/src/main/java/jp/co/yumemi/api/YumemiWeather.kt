@@ -18,7 +18,7 @@ class YumemiWeather(
     private val random: Random = Random.Default,
 ) {
 
-    fun fetchSimpleWeather(): String = Weather.values().random(random).name.lowercase()
+    fun fetchSimpleWeather(): String = Weather.entries.toTypedArray().random(random).name.lowercase()
 
     fun fetchThrowsWeather(): String {
         if ((0..4).random(random) == 4) {

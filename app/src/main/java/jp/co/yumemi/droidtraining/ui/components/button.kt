@@ -9,14 +9,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
+import jp.co.yumemi.api.YumemiWeather
 import jp.co.yumemi.droidtraining.ui.theme.YumemiWeatherTheme
 
 @Composable
 fun YumemiButton(
-    text: String
+    text: String,
+    handler: () -> Unit
 ){
     ElevatedButton(
-        onClick = {},
+        onClick = handler,
         shape = RectangleShape,
         modifier = Modifier
             .height(46.dp)
