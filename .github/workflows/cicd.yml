@@ -8,8 +8,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: lint
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Check current directory
+      run: pwd
+
+    - name: Run lint
       run: ./gradlew lintRelease
 
-    - name: test
+    - name: Run tests
       run: ./gradlew testReleaseUnitTest
