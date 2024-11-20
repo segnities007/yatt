@@ -7,18 +7,34 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.White
 
+
+object DarkColors {
+    val primary = Color(0xFF004e59)
+    val secondary = Color(0xFF334a50)
+    val background = Black
+    val surface = Black
+}
+
+object LightColor {
+    val primary = Color(0xFF006876)
+    val secondary = Color(0xFFb1cbd1)
+    val background = White
+    val surface = White
+}
+
+
 private val DarkColorScheme = darkColorScheme(
-    primary = Color(0xFF004e59),
-    secondary = Color(0xFF334a50),
-    background = Black,
-    surface = Black
+    primary = DarkColors.primary,
+    secondary = DarkColors.secondary,
+    background = DarkColors.background,
+    surface = DarkColors.surface
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Color(0xFF006876),
-    secondary = Color(0xFFb1cbd1),
-    background = White,
-    surface = White
+    primary = LightColor.primary,
+    secondary = LightColor.secondary,
+    background = LightColor.background,
+    surface = LightColor.surface
 )
 
 @Composable
