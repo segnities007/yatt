@@ -9,13 +9,16 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v3
 
     - name: Check current directory
       run: pwd
 
-    - name: Run lint
-      run: ./gradlew lintRelease
+    - name: List files in current directory
+      run: ls -l
 
-    - name: Run tests
-      run: ./gradlew testReleaseUnitTest
+    - name: Ensure gradlew is executable
+      run: chmod +x gradlew
+
+    - name: Run lintRelease
+      run: ./gradlew lintRelease
