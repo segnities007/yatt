@@ -9,16 +9,10 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
-
-    - name: Check current directory
-      run: pwd
-
-    - name: List files in current directory
-      run: ls -a
-
-    - name: Move to project directory (if needed)
-      run: cd yatt  # 必要に応じて適切なディレクトリ名に変更
+      uses: actions/checkout@v4
+      
+    - name: generate wapper
+      run: gradle wrapper
 
     - name: Ensure gradlew is executable
       run: chmod +x gradlew
