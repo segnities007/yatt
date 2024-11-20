@@ -4,7 +4,9 @@ import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -19,7 +21,6 @@ import jp.co.yumemi.droidtraining.ui.theme.WeatherColor
 
 @Composable
 fun Home(
-    context: Context,
     viewModel: HomeViewModel,
 ) {
 
@@ -27,6 +28,28 @@ fun Home(
     val spacerHeight = 80
     val buttonHeight = 46
     val weatherText = viewModel.weatherText.collectAsState()
+    val isShowDialog = viewModel.isShowDialog.collectAsState()
+
+    if(isShowDialog.value){
+        AlertDialog(
+            title = {Text("Error")},
+            text = {Text(text = "エラーが発生しました。")},
+            onDismissRequest = {},
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        viewModel.changeWeatherText()
+                        viewModel.hideDialog()
+                    }) {Text("RELOAD")}
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        viewModel.hideDialog()
+                    }) {Text("CLOSE")}
+            }
+        )
+    }
 
     Column(
         modifier = Modifier
@@ -38,7 +61,7 @@ fun Home(
             UpperSpacers(buttonHeight = buttonHeight, spacerHeight = spacerHeight, textHeight = textHeight)
             WeatherImage(textHeight = textHeight, weatherText = weatherText.value)
             Spacer(modifier = Modifier.height(spacerHeight.dp))
-            ChangeButtons(reloadHandler = {viewModel.changeWeatherText(context)}, nextHandler = {/*TODO*/})
+            ChangeButtons(reloadHandler = {viewModel.changeWeatherText()}, nextHandler = {/*TODO*/})
         }
     }
 }

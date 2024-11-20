@@ -26,7 +26,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Home(context = context, viewModel = HomeViewModel(context = context))
+                    Home(viewModel = HomeViewModel(context = context))
                 }
             }
         }
