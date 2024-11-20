@@ -15,7 +15,10 @@ jobs:
       run: pwd
 
     - name: List files in current directory
-      run: ls -l
+      run: ls -a
+
+    - name: Move to project directory (if needed)
+      run: cd yatt  # 必要に応じて適切なディレクトリ名に変更
 
     - name: Ensure gradlew is executable
       run: chmod +x gradlew
