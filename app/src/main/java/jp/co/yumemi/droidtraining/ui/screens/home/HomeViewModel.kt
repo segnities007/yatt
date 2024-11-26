@@ -1,44 +1,69 @@
 package jp.co.yumemi.droidtraining.ui.screens.home
 
-import android.content.Context
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.MutableStateFlow
+import dagger.hilt.android.lifecycle.HiltViewModel
 import jp.co.yumemi.api.YumemiWeather
+import jp.co.yumemi.droidtraining.R
+import jp.co.yumemi.droidtraining.ui.theme.WeatherColor
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class HomeViewModel(context: Context): ViewModel() {
+@HiltViewModel
+class HomeViewModel @Inject constructor(
+    private val savedStateHandle: SavedStateHandle,
+    private val yumemiWeather: YumemiWeather,
+) : ViewModel() {
 
-    private val _weatherText = MutableStateFlow("")
-    val weatherText: StateFlow<String> = _weatherText.asStateFlow()
-    private val _isShowDialog = MutableStateFlow(false)
-    val isShowDialog = _isShowDialog.asStateFlow()
-//    private val _upperDegree = MutableStateFlow(0)
-//    private val _lowerDegree = MutableStateFlow(0)
-    private val yumemiWeather = YumemiWeather(context = context)
+    val weatherText: StateFlow<String> = savedStateHandle.getStateFlow("weatherText", "sunny")
+    val isShowDialog: StateFlow<Boolean> = savedStateHandle.getStateFlow("isShowDialog", false)
 
-    init {
-        _weatherText.value = yumemiWeather.fetchSimpleWeather()
+
+    fun showDialog() {
+        savedStateHandle["isShowDialog"] = true
     }
 
-    fun showDialog(){
-        _isShowDialog.value = true
+    fun hideDialog() {
+        savedStateHandle["isShowDialog"] = false
     }
 
-    fun hideDialog(){
-        _isShowDialog.value = false
-    }
-
-    fun changeWeatherText(){
-        viewModelScope.launch{
+    fun changeWeatherText() {
+        viewModelScope.launch {
             try {
-                _weatherText.value = yumemiWeather.fetchThrowsWeather()
-            }catch (e: Throwable){
+                val newWeather = yumemiWeather.fetchThrowsWeather()
+                savedStateHandle["weatherText"] = newWeather
+            } catch (e: Throwable) {
                 println(e)
                 showDialog()
             }
         }
     }
+
+    fun vectorColor(
+        weatherText: String
+    ): ColorFilter{
+        when(weatherText){
+            "sunny"     -> return ColorFilter.tint(WeatherColor.sunny)
+            "rainy"     -> return ColorFilter.tint(WeatherColor.rainy)
+            "cloudy"    -> return ColorFilter.tint(WeatherColor.cloudy)
+            "snow"      -> return ColorFilter.tint(WeatherColor.snow)
+        }
+        return ColorFilter.tint(WeatherColor.sunny)
+    }
+
+    fun vectorID(
+        weatherText: String
+    ): Int{
+        when(weatherText){
+            "sunny"     -> return R.drawable.sunny
+            "rainy"     -> return R.drawable.rainy
+            "cloudy"    -> return R.drawable.cloudy
+            "snow"      -> return R.drawable.snow
+        }
+        return R.drawable.sunny
+    }
 }
+

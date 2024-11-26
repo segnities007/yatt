@@ -46,6 +46,7 @@ dependencies {
 
     // Moshi
     implementation("com.squareup.moshi:moshi:1.13.0")
+    implementation("com.google.dagger:hilt-android:2.51.1")
     ksp("com.squareup.moshi:moshi-kotlin-codegen:1.13.0")
 
     // Test
