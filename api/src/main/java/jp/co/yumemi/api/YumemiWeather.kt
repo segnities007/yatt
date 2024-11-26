@@ -5,16 +5,18 @@ package jp.co.yumemi.api
 import android.content.Context
 import android.os.NetworkOnMainThreadException
 import com.squareup.moshi.Moshi
+import dagger.hilt.android.qualifiers.ApplicationContext
 import jp.co.yumemi.api.model.DateAdapter
 import jp.co.yumemi.api.model.Weather
 import jp.co.yumemi.api.model.WeatherRequest
 import jp.co.yumemi.api.model.WeatherResponse
 import kotlinx.coroutines.delay
 import java.util.Date
+import javax.inject.Inject
 import kotlin.random.Random
 
-class YumemiWeather(
-    private val context: Context,
+class YumemiWeather @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val random: Random = Random.Default,
 ) {
 

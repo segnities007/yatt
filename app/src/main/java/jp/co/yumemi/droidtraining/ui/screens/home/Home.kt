@@ -1,6 +1,5 @@
 package jp.co.yumemi.droidtraining.ui.screens.home
 
-import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
@@ -15,22 +14,23 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import jp.co.yumemi.droidtraining.R
 import jp.co.yumemi.droidtraining.ui.components.YumemiButton
-import jp.co.yumemi.droidtraining.ui.theme.WeatherColor
+import androidx.compose.runtime.getValue
+import androidx.hilt.navigation.compose.hiltViewModel
+
 
 @Composable
 fun Home(
-    viewModel: HomeViewModel,
+    viewModel: HomeViewModel = hiltViewModel(),
 ) {
 
     val textHeight = 16
     val spacerHeight = 80
     val buttonHeight = 46
-    val weatherText = viewModel.weatherText.collectAsState()
-    val isShowDialog = viewModel.isShowDialog.collectAsState()
+    val weatherText by  viewModel.weatherText.collectAsState()
+    val isShowDialog by viewModel.isShowDialog.collectAsState()
 
-    if(isShowDialog.value){
+    if(isShowDialog){
         AlertDialog(
             title = {Text("Error")},
             text = {Text(text = "エラーが発生しました。")},
@@ -59,9 +59,9 @@ fun Home(
     ) {
         Column(){
             UpperSpacers(buttonHeight = buttonHeight, spacerHeight = spacerHeight, textHeight = textHeight)
-            WeatherImage(textHeight = textHeight, weatherText = weatherText.value)
+            WeatherImage(textHeight = textHeight, weatherText = weatherText, vectorColor = viewModel::vectorColor, vectorID = viewModel::vectorID)
             Spacer(modifier = Modifier.height(spacerHeight.dp))
-            ChangeButtons(reloadHandler = {viewModel.changeWeatherText()}, nextHandler = {/*TODO*/})
+            ChangeButtons(reloadHandler = viewModel::changeWeatherText, nextHandler = {/*TODO*/})
         }
     }
 }
@@ -81,6 +81,8 @@ private fun UpperSpacers(
 private fun WeatherImage(
     textHeight: Int,
     weatherText: String,
+    vectorID: (String) -> Int,
+    vectorColor: (String) -> ColorFilter,
 ){
     Image(
         painter = painterResource(id = vectorID(weatherText)),
@@ -96,30 +98,6 @@ private fun WeatherImage(
         DegreeText(textHeight = textHeight, color = "red")
         DegreeText(textHeight = textHeight, color = "blue")
     }
-}
-
-private fun vectorID(
-    weatherText: String
-): Int{
-    when(weatherText){
-        "sunny"     -> return R.drawable.sunny
-        "rainy"     -> return R.drawable.rainy
-        "cloudy"    -> return R.drawable.cloudy
-        "snow"      -> return R.drawable.snow
-    }
-    return R.drawable.sunny
-}
-
-private fun vectorColor(
-    weatherText: String
-): ColorFilter{
-    when(weatherText){
-        "sunny"     -> return ColorFilter.tint(WeatherColor.sunny)
-        "rainy"     -> return ColorFilter.tint(WeatherColor.rainy)
-        "cloudy"    -> return ColorFilter.tint(WeatherColor.cloudy)
-        "snow"      -> return ColorFilter.tint(WeatherColor.snow)
-    }
-    return ColorFilter.tint(WeatherColor.sunny)
 }
 
 @Composable
