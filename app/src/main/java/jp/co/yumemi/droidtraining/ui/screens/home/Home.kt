@@ -17,6 +17,8 @@ import androidx.compose.ui.unit.dp
 import jp.co.yumemi.droidtraining.ui.components.YumemiButton
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
+import jp.co.yumemi.droidtraining.ui.components.YumemiAlert
+import jp.co.yumemi.droidtraining.ui.components.YumemiProgressBar
 
 
 @Composable
@@ -29,27 +31,14 @@ fun Home(
     val buttonHeight = 46
     val weatherText by  viewModel.weatherText.collectAsState()
     val isShowDialog by viewModel.isShowDialog.collectAsState()
+    val isShowProgressBar by viewModel.isShowProgressBar.collectAsState()
 
-    if(isShowDialog){
-        AlertDialog(
-            title = {Text("Error")},
-            text = {Text(text = "エラーが発生しました。")},
-            onDismissRequest = {},
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        viewModel.changeWeatherText()
-                        viewModel.hideDialog()
-                    }) {Text("RELOAD")}
-            },
-            dismissButton = {
-                TextButton(
-                    onClick = {
-                        viewModel.hideDialog()
-                    }) {Text("CLOSE")}
-            }
-        )
-    }
+    YumemiAlert(
+        isShowDialog = isShowDialog,
+        reloadWeather = viewModel::reloadWeather,
+        hideDialog = viewModel::hideDialog
+    )
+
 
     Column(
         modifier = Modifier
@@ -61,9 +50,17 @@ fun Home(
             UpperSpacers(buttonHeight = buttonHeight, spacerHeight = spacerHeight, textHeight = textHeight)
             WeatherImage(textHeight = textHeight, weatherText = weatherText, vectorColor = viewModel::vectorColor, vectorID = viewModel::vectorID)
             Spacer(modifier = Modifier.height(spacerHeight.dp))
-            ChangeButtons(reloadHandler = viewModel::changeWeatherText, nextHandler = {/*TODO*/})
+            ChangeButtons(reloadHandler = viewModel::reloadWeather, nextHandler = {/*TODO*/})
         }
     }
+
+    YumemiProgressBar(
+        isShowProgressBar = isShowProgressBar,
+//        buttons = {ChangeButtons(reloadHandler = {}, nextHandler = {})},
+//        upperSpacer = {UpperSpacers(buttonHeight = buttonHeight, spacerHeight = spacerHeight, textHeight = textHeight)},
+//        spacer = {Spacer(modifier = Modifier.height(spacerHeight.dp))},
+    )
+
 }
 
 @Composable

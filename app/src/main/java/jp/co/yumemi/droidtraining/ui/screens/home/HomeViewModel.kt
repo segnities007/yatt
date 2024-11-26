@@ -18,26 +18,47 @@ class HomeViewModel @Inject constructor(
     private val yumemiWeather: YumemiWeather,
 ) : ViewModel() {
 
-    val weatherText: StateFlow<String> = savedStateHandle.getStateFlow("weatherText", "sunny")
-    val isShowDialog: StateFlow<Boolean> = savedStateHandle.getStateFlow("isShowDialog", false)
+    val weather = "weatherText"
+    val showDialog = "isShowDialog"
+    val showProgressBar = "isShowProgressBar"
+    val weatherText: StateFlow<String> = savedStateHandle.getStateFlow(weather, "sunny")
+    val isShowDialog: StateFlow<Boolean> = savedStateHandle.getStateFlow(showDialog, false)
+    val isShowProgressBar: StateFlow<Boolean> = savedStateHandle.getStateFlow(showProgressBar, false)
 
 
     fun showDialog() {
-        savedStateHandle["isShowDialog"] = true
+        savedStateHandle[showDialog] = true
     }
 
     fun hideDialog() {
-        savedStateHandle["isShowDialog"] = false
+        savedStateHandle[showDialog] = false
     }
 
-    fun changeWeatherText() {
+    fun showProgressBar(){
+        savedStateHandle[showProgressBar] = true
+    }
+
+    fun hideProgressbar(){
+        savedStateHandle[showProgressBar] = false
+    }
+
+    fun nextWeather(){
+        viewModelScope.launch {
+
+        }
+    }
+
+    fun reloadWeather() {
         viewModelScope.launch {
             try {
-                val newWeather = yumemiWeather.fetchThrowsWeather()
+                showProgressBar()
+                val newWeather = yumemiWeather.fetchWeatherAsync()
                 savedStateHandle["weatherText"] = newWeather
             } catch (e: Throwable) {
                 println(e)
                 showDialog()
+            }finally {
+                hideProgressbar()
             }
         }
     }
